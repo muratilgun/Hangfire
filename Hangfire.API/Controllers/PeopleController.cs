@@ -9,15 +9,18 @@ namespace Hangfire.API.Controllers;
 public class PeopleController : ControllerBase
 {
     private readonly ApplicationDbContext context;
+    private readonly IBackgroundJobClient _backgroundJobClient;
 
-    public PeopleController(ApplicationDbContext context)
+    public PeopleController(ApplicationDbContext context,IBackgroundJobClient backgroundJobClient)
     {
         this.context = context;
+        _backgroundJobClient = backgroundJobClient;
     }
 
     [HttpPost("create")]
     public async Task<ActionResult> Create(string personName)
     {
+        _backgroundJobClient.Enqueue(() => Console.WriteLine(personName));
         Console.WriteLine($"Adding person {personName}");
         var person = new Person { Name = personName };
         context.Add(person);
