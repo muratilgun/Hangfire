@@ -1,5 +1,6 @@
 using Hangfire;
 using Hangfire.API;
+using Hangfire.API.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer("name=DefaultConnection"));
+builder.Services.AddScoped<IPeopleRepository, PeopleRepository>();
+
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 

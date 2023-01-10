@@ -1,4 +1,5 @@
 ﻿using Hangfire.API.Entities;
+using Hangfire.API.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,21 +23,9 @@ public class PeopleController : ControllerBase
     {
         //_backgroundJobClient.Enqueue(() => Console.WriteLine(personName));
 
-        _backgroundJobClient.Enqueue(() => CreatePerson(personName));
-
-      
+        _backgroundJobClient
+            .Enqueue<IPeopleRepository>(repository => repository.CreatePerson(personName));
         return Ok();
     }
 
-    [ApiExplorerSettings(IgnoreApi = true)]
-    [NonAction]
-    public async Task CreatePerson(string personName)
-    {
-        Console.WriteLine($"Adding person {personName}");
-        var person = new Person { Name = personName };
-        context.Add(person);
-        await Task.Delay(5000);
-        await context.SaveChangesAsync();
-        Console.WriteLine($"Added the person {personName}");
-    }
 }
