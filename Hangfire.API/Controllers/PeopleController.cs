@@ -20,13 +20,23 @@ public class PeopleController : ControllerBase
     [HttpPost("create")]
     public async Task<ActionResult> Create(string personName)
     {
-        _backgroundJobClient.Enqueue(() => Console.WriteLine(personName));
+        //_backgroundJobClient.Enqueue(() => Console.WriteLine(personName));
+
+        _backgroundJobClient.Enqueue(() => CreatePerson(personName));
+
+      
+        return Ok();
+    }
+
+    [ApiExplorerSettings(IgnoreApi = true)]
+    [NonAction]
+    public async Task CreatePerson(string personName)
+    {
         Console.WriteLine($"Adding person {personName}");
         var person = new Person { Name = personName };
         context.Add(person);
         await Task.Delay(5000);
         await context.SaveChangesAsync();
         Console.WriteLine($"Added the person {personName}");
-        return Ok();
     }
 }
