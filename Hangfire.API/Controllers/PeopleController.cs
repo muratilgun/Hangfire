@@ -12,7 +12,7 @@ public class PeopleController : ControllerBase
     private readonly ApplicationDbContext context;
     private readonly IBackgroundJobClient _backgroundJobClient;
 
-    public PeopleController(ApplicationDbContext context,IBackgroundJobClient backgroundJobClient)
+    public PeopleController(ApplicationDbContext context, IBackgroundJobClient backgroundJobClient)
     {
         this.context = context;
         _backgroundJobClient = backgroundJobClient;
@@ -27,5 +27,11 @@ public class PeopleController : ControllerBase
             .Enqueue<IPeopleRepository>(repository => repository.CreatePerson(personName));
         return Ok();
     }
-
+    [HttpPost("schedule")]
+    public async Task<ActionResult> Schedule(string personName)
+    {
+        _backgroundJobClient.Schedule(() => Console.WriteLine("The name is " + personName),
+            TimeSpan.FromSeconds(10));
+        return Ok();
+    }
 }

@@ -29,7 +29,7 @@ builder.Services.AddHangfire(config => config
     UseRecommendedIsolationLevel=true,
     DisableGlobalLocks=true
 }));
-builder.Services.AddHangfireServer();
+builder.Services.AddHangfireServer(/* Default is 15 sec, opt => opt.SchedulePollingInterval = TimeSpan.FromSeconds(1)*/);
 
 
 var app = builder.Build();
