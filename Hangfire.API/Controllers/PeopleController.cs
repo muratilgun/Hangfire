@@ -30,8 +30,9 @@ public class PeopleController : ControllerBase
     [HttpPost("schedule")]
     public ActionResult Schedule(string personName)
     {
-        _backgroundJobClient.Schedule(() => Console.WriteLine("The name is " + personName),
-            TimeSpan.FromSeconds(10));
+        var jobId = _backgroundJobClient.Schedule(() => Console.WriteLine("The name is " + personName),
+             TimeSpan.FromSeconds(10));
+        _backgroundJobClient.ContinueWith(jobId, () => Console.WriteLine($"The job {jobId} has finished"));
         return Ok();
     }
 }
