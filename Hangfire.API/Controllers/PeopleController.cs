@@ -19,7 +19,7 @@ public class PeopleController : ControllerBase
     }
 
     [HttpPost("create")]
-    public async Task<ActionResult> Create(string personName)
+    public ActionResult Create(string personName)
     {
         //_backgroundJobClient.Enqueue(() => Console.WriteLine(personName));
 
@@ -28,7 +28,7 @@ public class PeopleController : ControllerBase
         return Ok();
     }
     [HttpPost("schedule")]
-    public async Task<ActionResult> Schedule(string personName)
+    public ActionResult Schedule(string personName)
     {
         _backgroundJobClient.Schedule(() => Console.WriteLine("The name is " + personName),
             TimeSpan.FromSeconds(10));

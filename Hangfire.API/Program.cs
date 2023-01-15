@@ -13,6 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer("name=DefaultConnection"));
 builder.Services.AddScoped<IPeopleRepository, PeopleRepository>();
+builder.Services.AddTransient<ITimeService, TimeService >();
 
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -42,6 +43,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthorization();
 app.UseHangfireDashboard();
+RecurringJob.AddOrUpdate<ITimeService>("print-time",service => service.PrintNow(),Cron.Daily());
 app.MapControllers();
 
 app.Run();
